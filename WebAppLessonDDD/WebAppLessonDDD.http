@@ -1,0 +1,6 @@
+@WebAppLessonDDD_HostAddress = http://localhost:5030
+
+GET {{WebAppLessonDDD_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

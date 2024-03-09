@@ -6,6 +6,8 @@ public class News
 {
     public const int MAX_TITLE_LENGTH = 100;
 
+    private readonly List<Image> _images = new List<Image>();
+
     private News(Guid id, string title, string textData, DateTime createDate, Image? titleImage)
     {
         Id = id;
@@ -19,10 +21,14 @@ public class News
     public string Title { get; } = string.Empty;
     public string TextData { get; } = string.Empty;
     public DateTime CreateDate { get; }
-    public int Views { get; } = 0;
+    public int Views { get; private set; } = 0;
     public Image? TitleImage { get; }
+    public void CountView() => Views++;
+    public IReadOnlyCollection<Image> ImageList => _images;
 
-    public static Result<News> CreateNews(Guid id, string title, string textData, DateTime createDate,
+    public void AddImages(List<Image> images) => _images.AddRange(images);
+
+    public static Result<News> Create(Guid id, string title, string textData,
         Image? titleImage)
     {
         if (string.IsNullOrEmpty(title) || title.Length > MAX_TITLE_LENGTH)
@@ -30,7 +36,7 @@ public class News
         if (string.IsNullOrEmpty(textData) || title.Length > MAX_TITLE_LENGTH)
             return Result.Failure<News>($"{nameof(textData)} cannot be null or empty");
 
-        var news = new News(id, title, textData, createDate, titleImage);
+        var news = new News(id, title, textData, DateTime.Now, titleImage);
 
         return Result.Success(news);
     }
